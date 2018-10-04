@@ -25,6 +25,7 @@ export default function CustomContextPadProvider(injector, connect, translate, e
   var cached = bind(this.getContextPadEntries, this);
 
   this.getContextPadEntries = function(element) {
+    var autoPlace = this._autoPlace;
     var actions = cached(element);
 
     var businessObject = element.businessObject;
@@ -45,15 +46,13 @@ export default function CustomContextPadProvider(injector, connect, translate, e
         var shape = elementFactory.createShape(assign({ type: type }, options));
         create.start(event, shape, element);
       }
-  
-  
+
       var append = autoPlace ? function(event, element) {
         var shape = elementFactory.createShape(assign({ type: type }, options));
   
         autoPlace.append(element, shape);
       } : appendStart;
-  
-  
+
       return {
         group: 'model',
         className: className,
