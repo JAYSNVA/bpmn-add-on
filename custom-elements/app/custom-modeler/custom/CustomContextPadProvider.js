@@ -70,6 +70,7 @@ export default function CustomContextPadProvider(injector, connect, translate, e
       assign(actions, {
         'append.text-annotation': appendAction('bpmn:TextAnnotation', 'bpmn-icon-text-annotation'),
         
+
         'connect': {
           group: 'connect',
           className: 'bpmn-icon-connection-multi',

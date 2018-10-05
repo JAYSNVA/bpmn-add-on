@@ -59,16 +59,16 @@ CustomRules.prototype.init = function() {
     if (isCustom(source)) {
       if (is(target, 'bpmn:Task')) {
         return { type: 'custom:connection' };
-      } else {
-        return false;
-      }
-    } else if (isCustom(target)) {
-      if (is(source, 'bpmn:Task')) {
+      } else if(is(target, 'custom:square')){
         return { type: 'custom:connection' };
-      } else {
+      } else if(is(target, 'custom:arrow')){
+        return { type: 'custom:connection' };
+      } else if(is(target, 'bpmn:Task')){
+        return { type: 'custom:connection' };
+      }else {
         return false;
       }
-    }
+    } 
   }
 
   this.addRule('elements.move', HIGH_PRIORITY, function(context) {
@@ -134,4 +134,5 @@ CustomRules.prototype.init = function() {
     return canConnect(source, target, connection);
   });
 
+  
 };
