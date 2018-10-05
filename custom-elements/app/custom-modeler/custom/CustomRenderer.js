@@ -1,6 +1,11 @@
 import inherits from 'inherits';
 
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
+import TextUtil from 'diagram-js/lib/util/Text';
+
+import {
+  getSemantic
+} from 'bpmn-js/lib/draw/BpmnRenderUtil';
 
 import {
   componentsToPath,
@@ -10,8 +15,14 @@ import {
 import {
   append as svgAppend,
   attr as svgAttr,
-  create as svgCreate
+  create as svgCreate,
+  classes as svgClasses
 } from 'tiny-svg';
+
+var LABEL_STYLE = {
+  fontFamily: 'Arial, sans-serif',
+  fontSize: 12
+};
 
 
 /**
@@ -21,13 +32,39 @@ export default function CustomRenderer(eventBus, styles) {
 
   BaseRenderer.call(this, eventBus, 2000);
 
+  var textUtil = new TextUtil({
+    style: LABEL_STYLE,
+    size: { width: 100 }
+  });
+
   var computeStyle = styles.computeStyle;
 
+  function renderLabel(parentGfx, label, options) {
+    var text = textUtil.createText(label || '', options);
+    svgClasses(text).add('djs-label');
+    svgAppend(parentGfx, text);
+
+    return text;
+  }
+
+  function renderEmbeddedLabel(parentGfx, element, align) {
+    var semantic = getSemantic(element);
+
+    return renderLabel(parentGfx, semantic.name, {
+      box: element,
+      align: align,
+      padding: 5,
+      style: {
+        fill: 'black'
+      }
+    });
+  }
+
   /* Rectangle Created (Diktörtgen Oluşturma) Start */
-  this.drawSquare = function(p, width, height) {
+  this.drawSquare = function(p, element) {
     var attrs, x, y;
-    var width = width;
-    var height = height;
+    var width = element.width;
+    var height = element.height;
     
     attrs = computeStyle(attrs, {
       stroke: '#000',
@@ -45,6 +82,8 @@ export default function CustomRenderer(eventBus, styles) {
     svgAttr(rectangle, attrs);
 
     svgAppend(p, rectangle);
+
+    renderEmbeddedLabel(p, element, 'center');
 
     return rectangle;
   };
@@ -70,10 +109,10 @@ export default function CustomRenderer(eventBus, styles) {
 
   /* SVG Line Created (BreadCrumb Create) Start*/
 
-  this.drawArrow = function(p, width, height){
+  this.drawArrow = function(p, element){
     var attrs;
-    var width = width;
-    var height = height;
+    var width = element.width;
+    var height = element.height;
 
     /*var line1_x1="2.60886", line1_y1="2.9258", line1_x2="122.02888",line1_y2="2.9258"; // line_1
     var line2_x1="2.60886", line2_y1="72.49086", line2_x2="122.02888",line2_y2="72.49086"; // line_2
@@ -159,6 +198,8 @@ export default function CustomRenderer(eventBus, styles) {
     svgAttr(breadCrumb_line6, attrs);
     svgAppend(p, breadCrumb_line6);
 
+    renderEmbeddedLabel(p, element, 'center-middle');
+
     return breadCrumb_line1;
   };
 
@@ -183,11 +224,11 @@ export default function CustomRenderer(eventBus, styles) {
 
 
   this.drawTriangle = function(p, side) {
-    var halfSide = side / 2,
+    var halfSide = side.width / 2,
         points,
         attrs;
 
-    points = [ halfSide, 0, side, side, 0, side ];
+    points = [ halfSide, 0, side.width, side.width, 0, side.width ];
 
     attrs = computeStyle(attrs, {
       stroke: '#3CAA82',
@@ -204,6 +245,8 @@ export default function CustomRenderer(eventBus, styles) {
     svgAttr(polygon, attrs);
 
     svgAppend(p, polygon);
+
+    renderEmbeddedLabel(p, side, 'center-middle');
 
     return polygon;
   };
@@ -224,7 +267,10 @@ export default function CustomRenderer(eventBus, styles) {
     return componentsToPath(trianglePath);
   };
 
-  this.drawCircle = function(p, width, height) {
+  this.drawCircle = function(p, element) {
+    var width = element.width;
+    var height = element.height;
+
     var cx = width / 2,
         cy = height / 2;
 
@@ -245,6 +291,8 @@ export default function CustomRenderer(eventBus, styles) {
     svgAttr(circle, attrs);
 
     svgAppend(p, circle);
+
+    renderEmbeddedLabel(p, element, 'center-middle');
 
     return circle;
   };
@@ -306,19 +354,19 @@ CustomRenderer.prototype.drawShape = function(p, element) {
   var type = element.type;
 
   if (type === 'custom:triangle') {
-    return this.drawTriangle(p, element.width);
+    return this.drawTriangle(p, element);
   }
 
   if (type === 'custom:circle') {
-    return this.drawCircle(p, element.width, element.height);
+    return this.drawCircle(p, element);
   }
 
   if (type === 'custom:square') {
-    return this.drawSquare(p, element.width, element.height);
+    return this.drawSquare(p, element);
   }
 
   if (type === 'custom:arrow') {
-    return this.drawArrow(p, element.width, element.height);
+    return this.drawArrow(p, element);
   }
 };
 

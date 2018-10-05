@@ -106,7 +106,7 @@ export default class CustomLabelEditingProvider extends LabelEditingProvider {
      * If the element is not an IDSM element, we simply delegate the work
      * to the parent class.
      */
-    /*if (!/^custom/.test(element.type)) {
+   /*if (!/^custom/.test(element.type) || !/^bpmn/.test(element.type)) {
       return super.getEditingBBox(element);
     }*/
 
@@ -171,7 +171,7 @@ export default class CustomLabelEditingProvider extends LabelEditingProvider {
     var newBounds,
     bbox;
 
-    if (/^custom:/.test(element.type) || /^bpmn:/.test(element.type)) {
+    if (/^custom:/.test(element.type)) {
       bbox = this._canvas.getAbsoluteBBox(element);
 
       newBounds = {

@@ -1,11 +1,18 @@
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 function getLabelAttr(semantic) {
-  if (is(semantic, 'custom:arrow')) {
+  if (is(semantic, 'custom:arrow') ||
+      is(semantic, 'custom:square') ||
+      is(semantic, 'custom:triangle') || 
+      is(semantic, 'custom:circle')) {
     return 'name';
   }
 
-  return 'text';
+  if (is(semantic, 'bpmn:TextAnnotation')) {
+    return 'text';
+  }
+
+  //return 'text';
 }
 
 export function getLabel(element) {
