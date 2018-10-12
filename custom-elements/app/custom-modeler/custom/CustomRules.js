@@ -63,7 +63,7 @@ CustomRules.prototype.init = function() {
         return { type: 'custom:connection' };
       } else if(is(target, 'custom:arrow')){
         return { type: 'custom:connection' };
-      } else if(is(target, 'bpmn:Task')){
+      } else if(is(target, 'bpmn:StartEvent')){
         return { type: 'custom:connection' };
       }else {
         return false;
@@ -134,5 +134,5 @@ CustomRules.prototype.init = function() {
     return canConnect(source, target, connection);
   });
 
-  
+
 };

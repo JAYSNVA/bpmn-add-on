@@ -391,7 +391,6 @@ CustomRenderer.prototype.getShapePath = function(shape) {
 };
 
 CustomRenderer.prototype.drawConnection = function(p, element) {
-
   var type = element.type;
 
   if (type === 'custom:connection') {
@@ -401,7 +400,6 @@ CustomRenderer.prototype.drawConnection = function(p, element) {
 
 
 CustomRenderer.prototype.getConnectionPath = function(connection) {
-
   var type = connection.type;
 
   if (type === 'custom:connection') {
