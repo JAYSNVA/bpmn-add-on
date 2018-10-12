@@ -10,7 +10,7 @@ function getLabelAttr(semantic) {
 
   if (is(semantic, 'bpmn:TextAnnotation')) {
     return 'text';
-  }
+  }    
 
   //return 'text';
 }

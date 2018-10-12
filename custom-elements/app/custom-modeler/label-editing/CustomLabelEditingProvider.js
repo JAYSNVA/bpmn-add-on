@@ -35,7 +35,7 @@ export default class CustomLabelEditingProvider extends LabelEditingProvider {
 
   // permettre l'edition de l'etiquette en cliquant sur le concept
   activateDirectEdit(element, force) {
-    if (force || /^custom/.test(element.type))
+    if (force || /^custom/.test(element.type) || /^bpmn/.test(element.type))
     {
       //console.log('trying to edit');
       this.directEditing.activate(element);
@@ -137,7 +137,7 @@ export default class CustomLabelEditingProvider extends LabelEditingProvider {
     // internal labels for tasks and collapsed call activities,
     // sub processes and participants
     // définit le comportement de base du concept ajouté en paramétre
-    if (/^custom/.test(element.type)) {
+    if (/^custom/.test(element.type) || /^bpmn/.test(element.type)) { // bpmn
 
       assign(bounds, {
         width: bbox.width,
@@ -171,7 +171,7 @@ export default class CustomLabelEditingProvider extends LabelEditingProvider {
     var newBounds,
     bbox;
 
-    if (/^custom:/.test(element.type)) {
+    if (/^custom:/.test(element.type) || /^bpmn/.test(element.type)) {
       bbox = this._canvas.getAbsoluteBBox(element);
 
       newBounds = {
